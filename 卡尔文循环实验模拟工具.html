@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卡尔文循环实验模拟</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f9f5;
+        }
+        
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        nav {
+            background: linear-gradient(to right, #2D7D46, #1B5E20);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-brand span {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+        
+        .nav-brand h1 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .experiment-container {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .experiment-setup {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .flask {
+            width: 100px;
+            height: 150px;
+            border: 2px solid #2e7d32;
+            border-radius: 0 0 50px 50px;
+            position: relative;
+            margin-right: 20px;
+            background: linear-gradient(to top, #e8f5e9 66%, transparent 66%);
+            overflow: hidden;
+        }
+        
+        .experiment-setup > div {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        
+        .experiment-setup p {
+            margin: 10px 0;
+        }
+        
+        .algae-cell {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #4caf50;
+            border-radius: 50%;
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .co2-input {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 25px;
+            background-color: #9e9e9e;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .light-source {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 20px;
+            background-color: #ffeb3b;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #ffeb3b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .results {
+            margin-top: 20px;
+        }
+        
+        .chromatography {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ddd;
+            position: relative;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .compound {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .c3 { 
+            background-color: #2196f3;
+            z-index: 3;
+        }
+        .c5 { 
+            background-color: #4caf50;
+            z-index: 2;
+        }
+        .c6 { 
+            background-color: #e91e63;
+            z-index: 1;
+        }
+        
+        .slider-container {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+        }
+        
+        .value-display {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        button {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background-color: #1b5e20;
+        }
+        
+        .info-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+        }
+        
+        .time-points {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .time-btn {
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <span>🍃</span>
+                    <h1>光合作用原理探索交互网页</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="main.html" class="nav-item">首页</a>
+                    <a href="希尔实验模拟工具.html" class="nav-item">希尔实验</a>
+                    <a href="阿尔农实验模拟工具.html" class="nav-item">阿尔农实验</a>
+                    <a href="贾格道夫实验模拟工具.html" class="nav-item">贾格道夫实验</a>
+                    <a href="光反应.html" class="nav-item">光反应模型</a>
+                    <a href="阿尔农虚拟实验工具2.html" class="nav-item">阿尔农2</a>
+                    <a href="卡尔文循环实验模拟工具.html" class="nav-item active">卡尔文循环</a>
+                    <a href="光反应和暗反应之间的联系.html" class="nav-item">光暗反应联系</a>
+                    <a href="对接高考.html" class="nav-item">对接高考</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1>卡尔文循环实验模拟</h1>
+        
+        <div class="container">
+            <div class="experiment-container">
+                <h2>实验装置</h2>
+                <div class="experiment-setup">
+                    <div class="flask" id="flask">
+                        <div class="co2-input">14CO₂</div>
+                        <div class="light-source">光照</div>
+                    </div>
+                    <div>
+                        <p>实验材料：小球藻悬浮液</p>
+                        <p>标记物：14C标记的CO₂</p>
+                        <p>光照条件：充足光照</p>
+                    </div>
+                </div>
+                
+                <h2>实验结果</h2>
+                <div class="results">
+                    <p>当前光照时间: <span id="currentTime">0</span> 秒</p>
+                    <div class="chromatography" id="chromatogram"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <h2>实验控制</h2>
+                
+                <div class="slider-container">
+                    <label for="lightDuration">光照时间 (秒)</label>
+                    <input type="range" id="lightDuration" min="0" max="30" value="0" step="0.1">
+                    <span class="value-display" id="timeValue">0 秒</span>
+                </div>
+                
+                <div>
+                    <button id="startBtn">开始实验</button>
+                    <button id="stopBtn">停止实验</button>
+                    <button id="resetBtn">重置</button>
+                </div>
+                
+                <div class="time-points">
+                    <button class="time-btn" data-time="0.5">0.5秒</button>
+                    <button class="time-btn" data-time="5">5秒</button>
+                    <button class="time-btn" data-time="10">10秒</button>
+                    <button class="time-btn" data-time="30">30秒</button>
+                </div>
+                
+                <div class="info-panel">
+                    <h3>实验说明</h3>
+                    <p>本实验模拟卡尔文用小球藻进行的14C标记实验：</p>
+                    <ul>
+                        <li>将14C标记的CO₂通入小球藻悬浮液</li>
+                        <li>在不同光照时间后杀死细胞并提取化合物</li>
+                        <li>通过纸层析法分离光合产物</li>
+                        <li>检测14C标记化合物的出现顺序</li>
+                    </ul>
+                    
+                    <div id="experimentInfo">
+                        <p>调整光照时间观察不同标记化合物的出现顺序。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const lightDuration = document.getElementById('lightDuration');
+        const timeValue = document.getElementById('timeValue');
+        const currentTime = document.getElementById('currentTime');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const chromatogram = document.getElementById('chromatogram');
+        const experimentInfo = document.getElementById('experimentInfo');
+        const timeBtns = document.querySelectorAll('.time-btn');
+        
+        let isRunning = false;
+        let animationId = null;
+        let currentTimeValue = 0;
+        
+        // 创建小球藻细胞
+        const flask = document.getElementById('flask');
+        for (let i = 0; i < 30; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'algae-cell';
+            cell.style.bottom = `${10 + Math.random() * 90}px`;
+            cell.style.left = `${10 + Math.random() * 80}px`;
+            cell.style.animationDelay = `${Math.random() * 2}s`;
+            flask.appendChild(cell);
+        }
+        
+        // 更新显示值
+        lightDuration.addEventListener('input', () => {
+            currentTimeValue = parseFloat(lightDuration.value);
+            timeValue.textContent = `${currentTimeValue.toFixed(1)} 秒`;
+            currentTime.textContent = currentTimeValue.toFixed(1);
+            updateChromatogram(currentTimeValue);
+        });
+        
+        // 时间点按钮
+        timeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const time = parseFloat(btn.dataset.time);
+                lightDuration.value = time;
+                currentTimeValue = time;
+                timeValue.textContent = `${time} 秒`;
+                currentTime.textContent = time;
+                updateChromatogram(time);
+            });
+        });
+        
+        // 更新层析结果
+        function updateChromatogram(time) {
+            chromatogram.innerHTML = '';
+            
+            if (time === 0) {
+                experimentInfo.innerHTML = '<p>调整光照时间观察不同标记化合物的出现顺序。</p>';
+                return;
+            }
+            
+            let compounds = [];
+            const chromatogramWidth = chromatogram.clientWidth;
+            
+            if (time <= 0.5) {
+                for (let i = 0; i < 5; i++) {
+                    compounds.push({
+                        type: 'c3',
+                        label: 'C3 (3-磷酸甘油酸)',
+                        amount: 90 - i * 10,
+                        position: 30 + i * 30
+                    });
+                }
+                
+                experimentInfo.innerHTML = `
+                    <p><strong>${time}秒实验结果:</strong></p>
+                    <p>90%的放射性出现在三碳化合物(C3)中</p>
+                    <p>这表明CO₂首先被固定为三碳化合物</p>
+                `;
+            } else if (time <= 5) {
+                for (let i = 0; i < 3; i++) {
+                    compounds.push({
+                        type: 'c3',
+                        label: 'C3',
+                        amount: 40 - i * 5,
+                        position: 30 + i * 40
+                    });
+                }
+                for (let i = 0; i < 2; i++) {
+                    compounds.push({
+                        type: 'c5',
+                        label: 'C5 (RuBP)',
+                        amount: 30 - i * 5,
+                        position: chromatogramWidth * 0.4 + i * 40
+                    });
+                }
+                for (let i = 0; i < 2; i++) {
+                    compounds.push({
+                        type: 'c6',
+                        label: 'C6 (葡萄糖)',
+                        amount: 30 - i * 5,
+                        position: chromatogramWidth * 0.7 + i * 40
+                    });
+                }
+                
+                experimentInfo.innerHTML = `
+                    <p><strong>${time}秒实验结果:</strong></p>
+                    <p>检测到三碳化合物(C3)、五碳化合物(C5)和六碳糖(C6)</p>
+                    <p>表明碳固定和还原过程同时进行</p>
+                `;
+            } else if (time <= 10) {
+                for (let i = 0; i < 2; i++) {
+                    compounds.push({
+                        type: 'c3',
+                        label: 'C3',
+                        amount: 20 - i * 5,
+                        position: 30 + i * 50
+                    });
+                }
+                for (let i = 0; i < 2; i++) {
+                    compounds.push({
+                        type: 'c5',
+                        label: 'C5',
+                        amount: 20 - i * 5,
+                        position: chromatogramWidth * 0.4 + i * 50
+                    });
+                }
+                for (let i = 0; i < 3; i++) {
+                    compounds.push({
+                        type: 'c6',
+                        label: 'C6',
+                        amount: 30 - i * 5,
+                        position: chromatogramWidth * 0.7 + i * 50
+                    });
+                }
+                
+                experimentInfo.innerHTML = `
+                    <p><strong>${time}秒实验结果:</strong></p>
+                    <p>检测到多种标记化合物，包括C3、C5和C6</p>
+                    <p>表明完整的卡尔文循环已经运行多个周期</p>
+                `;
+            } else {
+                for (let i = 0; i < 6; i++) {
+                    compounds.push({
+                        type: 'c3',
+                        label: 'C3',
+                        amount: 30 - i * 3,
+                        position: 20 + i * 35
+                    });
+                }
+                for (let i = 0; i < 4; i++) {
+                    compounds.push({
+                        type: 'c5',
+                        label: 'C5',
+                        amount: 30 - i * 3,
+                        position: chromatogramWidth * 0.4 + i * 35
+                    });
+                }
+                for (let i = 0; i < 7; i++) {
+                    compounds.push({
+                        type: 'c6',
+                        label: 'C6',
+                        amount: 40 - i * 3,
+                        position: chromatogramWidth * 0.7 + i * 35
+                    });
+                }
+                
+                experimentInfo.innerHTML = `
+                    <p><strong>${time}秒实验结果:</strong></p>
+                    <p>检测到大量标记化合物，C3、C5和C6数量明显增多</p>
+                    <p>表明经过长时间光照，光合作用产物大量积累</p>
+                `;
+            }
+            
+            compounds.forEach(compound => {
+                const el = document.createElement('div');
+                el.className = `compound ${compound.type}`;
+                el.textContent = compound.label;
+                el.style.bottom = `${20 + Math.random() * 60}px`;
+                el.style.left = `${compound.position}px`;
+                el.style.opacity = `${compound.amount / 100}`;
+                chromatogram.appendChild(el);
+            });
+        }
+        
+        // 动画循环
+        function animate() {
+            if (currentTimeValue < 30) {
+                currentTimeValue += 0.1;
+                lightDuration.value = currentTimeValue;
+                timeValue.textContent = `${currentTimeValue.toFixed(1)} 秒`;
+                currentTime.textContent = currentTimeValue.toFixed(1);
+                updateChromatogram(currentTimeValue);
+                animationId = requestAnimationFrame(animate);
+            } else {
+                isRunning = false;
+            }
+        }
+        
+        // 按钮事件
+        startBtn.addEventListener('click', () => {
+            if (!isRunning) {
+                isRunning = true;
+                animate();
+            }
+        });
+        
+        stopBtn.addEventListener('click', () => {
+            isRunning = false;
+            cancelAnimationFrame(animationId);
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            isRunning = false;
+            cancelAnimationFrame(animationId);
+            currentTimeValue = 0;
+            lightDuration.value = 0;
+            timeValue.textContent = '0 秒';
+            currentTime.textContent = '0';
+            updateChromatogram(0);
+        });
+        
+        // 初始更新
+        updateChromatogram(0);
+    </script>
+</body>
+</html>

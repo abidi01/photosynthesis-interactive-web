@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光合作用原理探索交互网页</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 自定义 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2D7D46',
+                        secondary: '#7CB342',
+                        accent: '#FFB300',
+                        light: '#E8F5E9',
+                        dark: '#1B5E20'
+                    },
+                    fontFamily: {
+                        sans: ['Arial', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            }
+        }
+    </style>
+    <style>
+        body {
+            background-image: url('图片/main背景图.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        
+        .overlay {
+            background-color: rgba(255, 255, 255, 0.85);
+            min-height: 100vh;
+        }
+        
+        .experiment-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            color: #2D7D46;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <!-- 导航栏 -->
+        <nav class="bg-gradient-to-r from-primary to-dark text-white shadow-lg">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        <i class="fa fa-leaf text-2xl mr-3" aria-hidden="true"></i>
+                        <h1 class="text-xl md:text-2xl font-bold text-shadow">光合作用原理探索交互网页</h1>
+                    </div>
+                    <div class="hidden md:flex space-x-1">
+                        <a href="main.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">首页</a>
+                        <a href="希尔实验模拟工具.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">希尔实验</a>
+                        <a href="阿尔农实验模拟工具.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">阿尔农实验</a>
+                        <a href="贾格道夫实验模拟工具.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">贾格道夫实验</a>
+                        <a href="光反应.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">光反应模型</a>
+                        <a href="阿尔农虚拟实验工具2.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">阿尔农2</a>
+                        <a href="卡尔文循环实验模拟工具.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">卡尔文循环</a>
+                        <a href="光反应和暗反应之间的联系.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">光暗反应联系</a>
+                        <a href="对接高考.html" class="nav-item px-3 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">对接高考</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主内容区 -->
+        <div class="container mx-auto px-4 py-8">
+            <!-- 标题区域 -->
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-[clamp(1.8rem,4vw,2.8rem)] font-bold text-primary mb-4">光合作用原理探索交互网页</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto text-lg">
+                    选择以下实验模拟工具，交互式体验光合作用关键实验的过程与原理，深入理解光合作用的机制。
+                </p>
+            </div>
+            
+            <!-- 实验卡片区域 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 希尔实验模拟工具 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in delay-1">
+                    <div class="experiment-card">
+                        <div class="text-center mb-4">
+                            <i class="fa fa-flask card-icon" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center text-primary mb-3">希尔实验模拟</h3>
+                        <p class="text-gray-600 mb-5 flex-grow">
+                            模拟希尔实验过程，观察在无CO₂条件下，叶绿体在光照下利用氧化剂进行光反应并释放氧气的现象。
+                        </p>
+                        <a href="希尔实验模拟工具.html" class="block w-full py-3 bg-primary text-white text-center rounded-lg hover:bg-dark transition-colors">
+                            开始实验 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 阿尔农实验模拟工具 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in delay-2">
+                    <div class="experiment-card">
+                        <div class="text-center mb-4">
+                            <i class="fa fa-bolt card-icon" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center text-primary mb-3">阿尔农实验模拟</h3>
+                        <p class="text-gray-600 mb-5 flex-grow">
+                            探索叶绿体在光下同时合成ATP和NADPH的过程，理解光反应的能量转化机制。
+                        </p>
+                        <a href="阿尔农实验模拟工具.html" class="block w-full py-3 bg-primary text-white text-center rounded-lg hover:bg-dark transition-colors">
+                            开始实验 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 贾格道夫实验模拟工具 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in delay-3">
+                    <div class="experiment-card">
+                        <div class="text-center mb-4">
+                            <i class="fa fa-exchange card-icon" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center text-primary mb-3">贾格道夫实验模拟</h3>
+                        <p class="text-gray-600 mb-5 flex-grow">
+                            演示化学渗透假说，观察类囊体膜两侧pH差如何驱动ATP合成，理解能量转化的关键步骤。
+                        </p>
+                        <a href="贾格道夫实验模拟工具.html" class="block w-full py-3 bg-primary text-white text-center rounded-lg hover:bg-dark transition-colors">
+                            开始实验 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 光反应模型 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in delay-4">
+                    <div class="experiment-card">
+                        <div class="text-center mb-4">
+                            <i class="fa fa-sun-o card-icon" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center text-primary mb-3">光反应模型</h3>
+                        <p class="text-gray-600 mb-5 flex-grow">
+                            了解光合作用光反应阶段的详细过程和机制。
+                        </p>
+                        <a href="光反应.html" class="block w-full py-3 bg-primary text-white text-center rounded-lg hover:bg-dark transition-colors">
+                            查看详情 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 阿尔农2实验模拟工具 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in delay-5">
+                    <div class="experiment-card">
+                        <div class="text-center mb-4">
+                            <i class="fa fa-lightbulb-o card-icon" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center text-primary mb-3">阿尔农2实验模拟</h3>
+                        <p class="text-gray-600 mb-5 flex-grow">
+                            深入理解能量转化过程，理解光能如何转化为化学能（有机物）的详细机制。
+                        </p>
+                        <a href="阿尔农虚拟实验工具2.html" class="block w-full py-3 bg-primary text-white text-center rounded-lg hover:bg-dark transition-colors">
+                            开始实验 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 卡尔文循环实验模拟工具 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in delay-5">
+                    <div class="experiment-card">
+                        <div class="text-center mb-4">
+                            <i class="fa fa-refresh card-icon" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center text-primary mb-3">卡尔文循环模拟</h3>
+                        <p class="text-gray-600 mb-5 flex-grow">
+                            探索暗反应阶段的碳固定过程，了解CO₂如何通过一系列反应转化为有机物的机制。
+                        </p>
+                        <a href="卡尔文循环实验模拟工具.html" class="block w-full py-3 bg-primary text-white text-center rounded-lg hover:bg-dark transition-colors">
+                            开始实验 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 光反应和暗反应之间的联系 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in delay-5">
+                    <div class="experiment-card">
+                        <div class="text-center mb-4">
+                            <i class="fa fa-exchange card-icon" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center text-primary mb-3">光暗反应联系</h3>
+                        <p class="text-gray-600 mb-5 flex-grow">
+                            通过拖动模型理解光反应和暗反应之间的物质交换关系，掌握ATP、NADPH等物质的循环过程。
+                        </p>
+                        <a href="光反应和暗反应之间的联系.html" class="block w-full py-3 bg-primary text-white text-center rounded-lg hover:bg-dark transition-colors">
+                            掌握光反应和暗反应之间的联系 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 对接高考 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in delay-5">
+                    <div class="experiment-card">
+                        <div class="text-center mb-4">
+                            <i class="fa fa-graduation-cap card-icon" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center text-primary mb-3">对接高考</h3>
+                        <p class="text-gray-600 mb-5 flex-grow">
+                            光合作用知识点专项测试，涵盖希尔实验、阿尔农实验、贾格道夫实验、卡尔文循环等内容，检验你的学习成果。
+                        </p>
+                        <a href="对接高考.html" class="block w-full py-3 bg-primary text-white text-center rounded-lg hover:bg-dark transition-colors">
+                            开始测试 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 知识点介绍 -->
+            <div class="mt-16 bg-light rounded-xl p-8 shadow-md fade-in">
+                <h3 class="text-2xl font-bold text-primary mb-6 text-center">光合作用实验的科学意义</h3>
+                <div>
+                    <p class="text-gray-700 mb-4">
+                        这些经典实验揭示了光合作用的核心机制，从光反应到暗反应，从能量捕获到碳固定，共同构成了我们对光合作用的完整理解。
+                    </p>
+                    <p class="text-gray-700">
+                        通过交互式模拟，你可以调整实验条件，观察不同变量对实验结果的影响，深入理解每个实验的设计思路和科学结论。
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <footer class="bg-dark text-white py-6 mt-12">
+            <div class="container mx-auto px-4 text-center">
+                <p>© 2025 光合作用原理探索交互网页 | 高中生物教学辅助资源</p>
+                <p class="mt-2 text-sm text-gray-300">
+                    本工具仅供教学使用，旨在帮助学生理解光合作用的基本原理
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // 高亮当前页面
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'main.html';
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (href === currentPage || (currentPage === '' && href === 'main.html')) {
+                    item.classList.add('bg-opacity-40');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贾格道夫实验模拟工具</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f9fa;
+        }
+        
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        nav {
+            background: linear-gradient(to right, #2D7D46, #1B5E20);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-brand span {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+        
+        .nav-brand h1 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        header {
+            background-color: #2c7873;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+        }
+        .simulator-section {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2c7873;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            margin: 10px;
+            text-align: center;
+            min-width: 180px;
+        }
+        button {
+            background-color: #2c7873;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #235d59;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .action-buttons button {
+            width: auto;
+            padding: 10px 20px;
+        }
+        .reset-btn {
+            background-color: #e74c3c;
+        }
+        .stop-btn {
+            background-color: #f39c12;
+        }
+        .light-control {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .light-switch {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .light-off {
+            background-color: #7f8c8d;
+        }
+        .simulator-container {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        .beaker {
+            display: inline-block;
+            width: 200px;
+            height: 250px;
+            margin: 0 30px;
+            position: relative;
+            border-radius: 0 0 20px 20px;
+            border: 3px solid #333;
+            overflow: hidden;
+            vertical-align: bottom;
+        }
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            transition: height 1s, background-color 1s;
+        }
+        .beaker-label {
+            position: absolute;
+            bottom: -25px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+        .thylakoid {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            transition: all 1s;
+        }
+        .atp-counter {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d35400;
+            margin: 20px 0;
+        }
+        .status-message {
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            margin: 10px 0;
+            min-height: 20px;
+        }
+        .ph-indicator {
+            display: block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin: 5px auto;
+            width: fit-content;
+        }
+        .ph4 {
+            background-color: #ffcccc;
+            color: #cc0000;
+        }
+        .ph8 {
+            background-color: #ccffff;
+            color: #0066cc;
+        }
+        .light-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 0, 0.1);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .atp-particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: yellow;
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 2s ease-out;
+            filter: drop-shadow(0 0 5px yellow);
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+        /* 新增类囊体膜样式 */
+        .membrane-section {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .membrane-container {
+            position: relative;
+            width: 400px;
+            height: 200px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+        .membrane {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-color: #4CAF50;
+            transform: translateY(-50%);
+        }
+        .atp-synthase {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #8BC34A;
+            border-radius: 5px;
+        }
+        .atp-synthase::after {
+            content: "ATP合酶";
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #333;
+        }
+        .stroma {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-color: rgba(204, 255, 255, 0.3);
+        }
+        .lumen {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-color: rgba(255, 204, 204, 0.3);
+        }
+        .proton {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            font-size: 10px;
+            text-align: center;
+            line-height: 10px;
+            color: white;
+        }
+        .proton::after {
+            content: "H⁺";
+        }
+        .membrane-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .membrane-controls button {
+            padding: 8px 15px;
+            width: auto;
+        }
+        .add-stroma {
+            background-color: #3498db;
+        }
+        .add-lumen {
+            background-color: #e74c3c;
+        }
+        .proton-counter {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        .proton-count {
+            font-weight: bold;
+        }
+        .stroma-count {
+            color: #3498db;
+        }
+        .lumen-count {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <span>🍃</span>
+                    <h1>光合作用原理探索交互网页</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="main.html" class="nav-item">首页</a>
+                    <a href="希尔实验模拟工具.html" class="nav-item">希尔实验</a>
+                    <a href="阿尔农实验模拟工具.html" class="nav-item">阿尔农实验</a>
+                    <a href="贾格道夫实验模拟工具.html" class="nav-item active">贾格道夫实验</a>
+                    <a href="光反应.html" class="nav-item">光反应模型</a>
+                    <a href="阿尔农虚拟实验工具2.html" class="nav-item">阿尔农2</a>
+                    <a href="卡尔文循环实验模拟工具.html" class="nav-item">卡尔文循环</a>
+                    <a href="光反应和暗反应之间的联系.html" class="nav-item">光暗反应联系</a>
+                    <a href="对接高考.html" class="nav-item">对接高考</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <header style="background-color: #2c7873; color: white; padding: 20px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+        <h1>贾格道夫实验模拟工具</h1>
+        <p>化学渗透假说的交互式演示</p>
+    </header>
+
+    <section class="simulator-section">
+        <h2>实验模拟</h2>
+        
+        <div class="light-control">
+            <div class="light-switch" id="lightSwitch">光照: 关闭</div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <button id="step1">1. 准备类囊体</button>
+                <div class="control-description">从菠菜叶中分离类囊体</div>
+            </div>
+            <div class="control-group">
+                <button id="step2" disabled>2. 酸性处理</button>
+                <div class="control-description">将类囊体置于</div>
+                <div class="ph-indicator ph4">pH = 4 (酸性)</div>
+            </div>
+            <div class="control-group">
+                <button id="step3" disabled>3. 转移至缓冲液</button>
+                <div class="control-description">转移到含ADP+Pi的</div>
+                <div class="ph-indicator ph8">pH = 8 (碱性)</div>
+            </div>
+            <div class="control-group">
+                <button id="step4" disabled>4. 观察ATP合成</button>
+                <div class="control-description">检测ATP的产生</div>
+            </div>
+        </div>
+        
+        <div class="simulator-container">
+            <div class="light-effect" id="lightEffect"></div>
+            <div class="beaker" id="acidBeaker">
+                <div class="liquid" id="acidLiquid" style="height: 0%; background-color: #ffcccc;"></div>
+                <div class="beaker-label">酸性溶液</div>
+            </div>
+            
+            <div class="beaker" id="bufferBeaker">
+                <div class="liquid" id="bufferLiquid" style="height: 0%; background-color: #ccffff;"></div>
+                <div class="beaker-label">缓冲液</div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="resetBtn" class="reset-btn">重置实验</button>
+            <button id="stopBtn" class="stop-btn" disabled>停止实验</button>
+        </div>
+        
+        <div class="atp-counter" id="atpCounter">ATP数量: 0</div>
+        <div class="status-message" id="statusMessage">请点击"准备类囊体"开始实验</div>
+    </section>
+
+    <!-- 新增类囊体膜部分 -->
+    <section class="simulator-section">
+        <h2>类囊体膜结构</h2>
+        <div class="membrane-section">
+            <div class="membrane-container">
+                <div class="stroma" id="stroma"></div>
+                <div class="lumen" id="lumen"></div>
+                <div class="membrane"></div>
+                <div class="atp-synthase"></div>
+            </div>
+            
+            <div class="membrane-controls">
+                <button id="addStromaBtn" class="add-stroma">向基质添加H⁺</button>
+                <button id="addLumenBtn" class="add-lumen">向腔体添加H⁺</button>
+            </div>
+            
+            <div class="proton-counter">
+                <div>基质H⁺浓度: <span id="stromaCount" class="proton-count stroma-count">0</span></div>
+                <div>腔体H⁺浓度: <span id="lumenCount" class="proton-count lumen-count">0</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="simulator-section">
+        <h2>实验原理</h2>
+        <div>
+            <p>贾格道夫实验的关键在于人为创建跨膜质子梯度：</p>
+            <ul>
+                <li>在pH4酸性溶液中，类囊体腔内积累H⁺</li>
+                <li>转移到pH8缓冲液时形成H⁺浓度差</li>
+                <li>H⁺通过ATP合成酶流出，驱动ADP+Pi合成ATP</li>
+                <li>整个过程不需要光照，证明H⁺梯度是ATP合成的驱动力</li>
+                <li>开启光照时，可以观察到光合磷酸化过程</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p>高中生物教学资源 | 贾格道夫实验模拟工具</p>
+    </footer>
+
+    <script>
+        // 模拟实验状态
+        const state = {
+            thylakoidsPrepared: false,
+            inAcidSolution: false,
+            transferred: false,
+            atpProduced: 0,
+            thylakoids: [],
+            lightOn: false,
+            atpInterval: null,
+            isRunning: false,
+            stromaProtons: 0,
+            lumenProtons: 0
+        };
+
+        // DOM元素
+        const step1Btn = document.getElementById('step1');
+        const step2Btn = document.getElementById('step2');
+        const step3Btn = document.getElementById('step3');
+        const step4Btn = document.getElementById('step4');
+        const acidBeaker = document.getElementById('acidBeaker');
+        const bufferBeaker = document.getElementById('bufferBeaker');
+        const acidLiquid = document.getElementById('acidLiquid');
+        const bufferLiquid = document.getElementById('bufferLiquid');
+        const atpCounter = document.getElementById('atpCounter');
+        const statusMessage = document.getElementById('statusMessage');
+        const lightSwitch = document.getElementById('lightSwitch');
+        const lightEffect = document.getElementById('lightEffect');
+        const resetBtn = document.getElementById('resetBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const addStromaBtn = document.getElementById('addStromaBtn');
+        const addLumenBtn = document.getElementById('addLumenBtn');
+        const stromaCount = document.getElementById('stromaCount');
+        const lumenCount = document.getElementById('lumenCount');
+        const stroma = document.getElementById('stroma');
+        const lumen = document.getElementById('lumen');
+
+        // 创建ATP粒子效果
+        function createATPParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'atp-particle';
+            
+            // 随机位置
+            const x = Math.random() * 180 + 10;
+            particle.style.left = `${x}px`;
+            particle.style.bottom = '50px';
+            
+            bufferBeaker.appendChild(particle);
+            
+            // 动画结束后移除粒子
+            setTimeout(() => {
+                particle.remove();
+            }, 2000);
+        }
+
+        // 重置实验
+        function resetExperiment() {
+            // 清除所有类囊体
+            state.thylakoids.forEach(thylakoid => {
+                thylakoid.remove();
+            });
+            
+            // 重置状态
+            state.thylakoidsPrepared = false;
+            state.inAcidSolution = false;
+            state.transferred = false;
+            state.atpProduced = 0;
+            state.thylakoids = [];
+            state.lightOn = false;
+            state.isRunning = false;
+            state.stromaProtons = 0;
+            state.lumenProtons = 0;
+            
+            // 清除液体
+            acidLiquid.style.height = '0%';
+            bufferLiquid.style.height = '0%';
+            
+            // 重置按钮状态
+            step1Btn.disabled = false;
+            step2Btn.disabled = true;
+            step3Btn.disabled = true;
+            step4Btn.disabled = true;
+            stopBtn.disabled = true;
+            
+            // 重置光照
+            lightSwitch.textContent = "光照: 关闭";
+            lightSwitch.classList.add('light-off');
+            lightEffect.style.opacity = '0';
+            
+            // 重置计数器
+            atpCounter.textContent = "ATP数量: 0";
+            stromaCount.textContent = "0";
+            lumenCount.textContent = "0";
+            
+            // 清除ATP生成间隔
+            if (state.atpInterval) {
+                clearInterval(state.atpInterval);
+                state.atpInterval = null;
+            }
+            
+            // 清除所有H⁺粒子
+            while (stroma.firstChild) {
+                stroma.removeChild(stroma.firstChild);
+            }
+            while (lumen.firstChild) {
+                lumen.removeChild(lumen.firstChild);
+            }
+            
+            statusMessage.textContent = "实验已重置，请点击'准备类囊体'重新开始实验";
+        }
+
+        // 停止实验
+        function stopExperiment() {
+            if (state.atpInterval) {
+                clearInterval(state.atpInterval);
+                state.atpInterval = null;
+            }
+            state.isRunning = false;
+            stopBtn.disabled = true;
+            statusMessage.textContent = "实验已停止";
+        }
+
+        // 光照控制
+        lightSwitch.addEventListener('click', function() {
+            state.lightOn = !state.lightOn;
+            if (state.lightOn) {
+                lightSwitch.textContent = "光照: 开启";
+                lightSwitch.classList.remove('light-off');
+                lightEffect.style.opacity = '0.3';
+                statusMessage.textContent = "光照已开启，观察光合磷酸化过程";
+            } else {
+                lightSwitch.textContent = "光照: 关闭";
+                lightSwitch.classList.add('light-off');
+                lightEffect.style.opacity = '0';
+                statusMessage.textContent = "光照已关闭，观察化学渗透过程";
+            }
+        });
+
+        // 重置按钮事件
+        resetBtn.addEventListener('click', resetExperiment);
+
+        // 停止按钮事件
+        stopBtn.addEventListener('click', stopExperiment);
+
+        // 步骤1: 准备类囊体
+        step1Btn.addEventListener('click', function() {
+            statusMessage.textContent = "正在从菠菜叶中分离类囊体...";
+            
+            setTimeout(() => {
+                state.thylakoidsPrepared = true;
+                step1Btn.disabled = true;
+                step2Btn.disabled = false;
+                
+                // 创建类囊体
+                for (let i = 0; i < 5; i++) {
+                    const thylakoid = document.createElement('div');
+                    thylakoid.className = 'thylakoid';
+                    thylakoid.style.left = `${30 + i * 30}px`;
+                    thylakoid.style.bottom = '10px';
+                    acidBeaker.appendChild(thylakoid);
+                    state.thylakoids.push(thylakoid);
+                }
+                
+                statusMessage.textContent = "类囊体准备完成！现在可以将它们置于酸性溶液中。";
+            }, 1000);
+        });
+
+        // 步骤2: 酸性处理
+        step2Btn.addEventListener('click', function() {
+            statusMessage.textContent = "将类囊体置于pH4酸性溶液中...";
+            acidLiquid.style.height = '80%';
+            
+            setTimeout(() => {
+                state.inAcidSolution = true;
+                step2Btn.disabled = true;
+                step3Btn.disabled = false;
+                
+                // 模拟H+进入类囊体
+                state.thylakoids.forEach(thylakoid => {
+                    thylakoid.style.backgroundColor = '#8BC34A'; // 颜色变深表示H+积累
+                });
+                
+                statusMessage.textContent = "酸性处理完成！类囊体内已积累H⁺。现在可以转移到缓冲液中。";
+            }, 1500);
+        });
+
+        // 步骤3: 转移至缓冲液
+        step3Btn.addEventListener('click', function() {
+            statusMessage.textContent = "将类囊体转移到含ADP和Pi的pH8缓冲液中...";
+            bufferLiquid.style.height = '80%';
+            
+            setTimeout(() => {
+                state.transferred = true;
+                step3Btn.disabled = true;
+                step4Btn.disabled = false;
+                stopBtn.disabled = false;
+                
+                // 移动类囊体到缓冲液烧杯
+                state.thylakoids.forEach((thylakoid, index) => {
+                    thylakoid.style.left = `${280 + index * 30}px`;
+                    thylakoid.style.bottom = '10px';
+                });
+                
+                statusMessage.textContent = "转移完成！现在可以观察ATP的合成。" + 
+                    (state.lightOn ? " (光照条件下)" : " (无光条件下)");
+            }, 1500);
+        });
+
+        // 步骤4: 观察ATP合成
+        step4Btn.addEventListener('click', function() {
+            statusMessage.textContent = "正在观察ATP合成..." + 
+                (state.lightOn ? " (光照条件下)" : " (无光条件下)");
+            
+            state.isRunning = true;
+            let atpCount = 0;
+            const baseSpeed = state.lightOn ? 100 : 200; // 光照时ATP合成更快
+            
+            state.atpInterval = setInterval(() => {
+                if (!state.isRunning) return;
+                
+                // 光照条件下ATP合成速度更快
+                const increment = state.lightOn ? 
+                    Math.floor(Math.random() * 5) + 2 : 
+                    Math.floor(Math.random() * 3) + 1;
+                
+                atpCount += increment;
+                if (atpCount > 30) atpCount = 30;
+                atpCounter.textContent = `ATP数量: ${atpCount}`;
+                
+                // 创建ATP粒子效果
+                for (let i = 0; i < increment; i++) {
+                    createATPParticle();
+                }
+                
+                if (atpCount >= 30) {
+                    clearInterval(state.atpInterval);
+                    state.atpInterval = null;
+                    step4Btn.disabled = true;
+                    stopBtn.disabled = true;
+                    state.isRunning = false;
+                    const conclusion = state.lightOn ? 
+                        "实验完成！在光照条件下观察到更多的ATP合成，证明光照能促进光合磷酸化过程。" : 
+                        "实验完成！在无光条件下成功合成了ATP，证明H⁺梯度可以驱动ATP合成。";
+                    statusMessage.textContent = conclusion;
+                }
+            }, baseSpeed);
+        });
+
+        // 添加H⁺粒子
+        function addProton(location) {
+            const container = location === 'stroma' ? stroma : lumen;
+            const proton = document.createElement('div');
+            proton.className = 'proton';
+            
+            // 随机位置
+            const x = Math.random() * 380 + 10;
+            const y = Math.random() * 80 + 10;
+            proton.style.left = `${x}px`;
+            proton.style.top = location === 'stroma' ? `${y}px` : `${y + 100}px`;
+            
+            container.appendChild(proton);
+            
+            // 5秒后消失
+            setTimeout(() => {
+                proton.remove();
+                if (location === 'stroma') {
+                    state.stromaProtons--;
+                    stromaCount.textContent = state.stromaProtons;
+                } else {
+                    state.lumenProtons--;
+                    lumenCount.textContent = state.lumenProtons;
+                }
+                checkProtonGradient();
+            }, 5000);
+        }
+
+        // 检查质子梯度并合成ATP
+        function checkProtonGradient() {
+            if (state.lumenProtons > state.stromaProtons && state.lumenProtons > 3) {
+                const gradient = state.lumenProtons - state.stromaProtons;
+                const atpToAdd = Math.floor(gradient / 3);
+                
+                if (atpToAdd > 0) {
+                    // 更新ATP计数器
+                    const currentATP = parseInt(atpCounter.textContent.split(':')[1].trim());
+                    atpCounter.textContent = `ATP数量: ${currentATP + atpToAdd}`;
+                    
+                    // 创建ATP粒子效果
+                    for (let i = 0; i < atpToAdd; i++) {
+                        createATPParticle();
+                    }
+                    
+                    statusMessage.textContent = `检测到质子梯度！合成了${atpToAdd}个ATP分子`;
+                }
+            }
+        }
+
+        // 添加H⁺按钮事件
+        addStromaBtn.addEventListener('click', function() {
+            state.stromaProtons++;
+            stromaCount.textContent = state.stromaProtons;
+            addProton('stroma');
+            checkProtonGradient();
+        });
+
+        addLumenBtn.addEventListener('click', function() {
+            state.lumenProtons++;
+            lumenCount.textContent = state.lumenProtons;
+            addProton('lumen');
+            checkProtonGradient();
+        });
+    </script>
+</body>
+</html>

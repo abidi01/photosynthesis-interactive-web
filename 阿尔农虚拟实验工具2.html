@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿尔农虚拟实验工具2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        /* 导航栏样式 */
+        nav {
+            background: linear-gradient(to right, #2D7D46, #1B5E20);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-brand span {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+        
+        .nav-brand h1 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+        }
+        .experiment-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .test-tube {
+            width: 100px;
+            height: 200px;
+            border: 2px solid #333;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            overflow: hidden;
+            background-color: #e3f2fd;
+            margin-bottom: 20px;
+        }
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #a5d6a7;
+            height: 66.66%;
+            transition: height 0.5s;
+        }
+        .chloroplast {
+            position: absolute;
+            width: 15px;
+            height: 8px;
+            background-color: #2e7d32;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: float 5s infinite ease-in-out;
+        }
+        .sugar-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: white;
+            text-shadow: 0 0 2px black;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .light-btn {
+            background-color: #ffeb3b;
+            color: #333;
+        }
+        .light-btn.on {
+            background-color: #fbc02d;
+            box-shadow: 0 0 10px #ffeb3b;
+        }
+        .co2-btn {
+            background-color: #9e9e9e;
+            color: white;
+        }
+        .co2-btn.active {
+            background-color: #616161;
+        }
+        .atp-btn {
+            background-color: #ff5722;
+            color: white;
+        }
+        .atp-btn.active {
+            background-color: #e64a19;
+        }
+        .nadph-btn {
+            background-color: #673ab7;
+            color: white;
+        }
+        .nadph-btn.active {
+            background-color: #512da8;
+        }
+        .action-btn {
+            background-color: #2196f3;
+            color: white;
+        }
+        .action-btn.reset {
+            background-color: #f44336;
+        }
+        .status {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+            min-height: 20px;
+        }
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            margin-top: 20px;
+            position: relative;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+        .info-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        .info-panel h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        .info-panel ul {
+            margin-left: 20px;
+        }
+        .info-panel li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <span>🍃</span>
+                    <h1>光合作用原理探索交互网页</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="main.html" class="nav-item">首页</a>
+                    <a href="希尔实验模拟工具.html" class="nav-item">希尔实验</a>
+                    <a href="阿尔农实验模拟工具.html" class="nav-item">阿尔农实验</a>
+                    <a href="贾格道夫实验模拟工具.html" class="nav-item">贾格道夫实验</a>
+                    <a href="光反应.html" class="nav-item">光反应模型</a>
+                    <a href="阿尔农虚拟实验工具2.html" class="nav-item active">阿尔农2</a>
+                    <a href="卡尔文循环实验模拟工具.html" class="nav-item">卡尔文循环</a>
+                    <a href="光反应和暗反应之间的联系.html" class="nav-item">光暗反应联系</a>
+                    <a href="对接高考.html" class="nav-item">对接高考</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>阿尔农虚拟实验工具2</h1>
+        <div class="experiment-area">
+            <div class="test-tube" id="testTube">
+                <div class="liquid">
+                    <div class="sugar-indicator">糖类: 0</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="sugarChart"></canvas>
+            </div>
+            <div class="status">准备开始实验</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="light-btn" id="lightBtn">光照: 关闭</button>
+            <button class="co2-btn" id="co2Btn">添加CO₂</button>
+            <button class="atp-btn" id="atpBtn">添加ATP</button>
+            <button class="nadph-btn" id="nadphBtn">添加NADPH</button>
+        </div>
+        <div class="controls">
+            <button class="action-btn" id="startBtn">开始实验</button>
+            <button class="action-btn" id="stopBtn">停止实验</button>
+            <button class="action-btn reset" id="resetBtn">重置实验</button>
+        </div>
+        
+        <div class="info-panel">
+            <h3>实验说明</h3>
+            <p><strong>实验目的：</strong>模拟光合作用中光反应和暗反应（卡尔文循环）的关系</p>
+            <ul>
+                <li><strong>光反应阶段：</strong>开启光照后，叶绿体利用光能产生ATP和NADPH（不需要外加ATP/NADPH）</li>
+                <li><strong>暗反应阶段：</strong>关闭光照，添加CO₂、ATP和NADPH后，可以合成糖类</li>
+                <li><strong>完整光合作用：</strong>同时开启光照和添加CO₂，可以持续合成糖类</li>
+            </ul>
+            <p><strong>操作提示：</strong></p>
+            <ul>
+                <li>点击各按钮切换实验条件（按钮变色表示已激活）</li>
+                <li>点击"开始实验"观察糖类生成曲线</li>
+                <li>尝试不同条件组合，理解光反应和暗反应的关系</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="js/chart.min.js"></script>
+    <script>
+        // 实验状态变量
+        let isLightOn = false;
+        let hasCO2 = false;
+        let hasATP = false;
+        let hasNADPH = false;
+        let isExperimentRunning = false;
+        let sugarLevel = 0;
+        let experimentInterval;
+        let sugarData = [];
+        let timeData = [];
+        let chart;
+        
+        // DOM元素
+        const lightBtn = document.getElementById('lightBtn');
+        const co2Btn = document.getElementById('co2Btn');
+        const atpBtn = document.getElementById('atpBtn');
+        const nadphBtn = document.getElementById('nadphBtn');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const statusText = document.querySelector('.status');
+        const sugarIndicator = document.querySelector('.sugar-indicator');
+        const progressBar = document.querySelector('.progress-bar');
+        const testTube = document.getElementById('testTube');
+        const ctx = document.getElementById('sugarChart').getContext('2d');
+        
+        // 创建叶绿体
+        function createChloroplasts() {
+            const liquid = document.querySelector('.liquid');
+            for (let i = 0; i < 10; i++) {
+                const chloroplast = document.createElement('div');
+                chloroplast.className = 'chloroplast';
+                chloroplast.style.left = `${Math.random() * 80 + 10}px`;
+                chloroplast.style.bottom = `${Math.random() * 120}px`;
+                chloroplast.style.animationDelay = `${Math.random() * 5}s`;
+                chloroplast.style.transform = `rotate(${Math.random() * 360}deg)`;
+                liquid.appendChild(chloroplast);
+            }
+        }
+        
+        // 初始化图表
+        function initChart() {
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timeData,
+                    datasets: [{
+                        label: '糖类生成量',
+                        data: sugarData,
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: '糖类生成量 (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '时间 (秒)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 更新图表
+        function updateChart(time) {
+            timeData.push(time);
+            sugarData.push(sugarLevel);
+            chart.update();
+        }
+        
+        // 光照按钮点击事件
+        lightBtn.addEventListener('click', () => {
+            isLightOn = !isLightOn;
+            lightBtn.textContent = `光照: ${isLightOn ? '开启' : '关闭'}`;
+            lightBtn.classList.toggle('on', isLightOn);
+            updateStatus();
+        });
+        
+        // CO2按钮点击事件
+        co2Btn.addEventListener('click', () => {
+            hasCO2 = !hasCO2;
+            co2Btn.classList.toggle('active', hasCO2);
+            updateStatus();
+        });
+        
+        // ATP按钮点击事件
+        atpBtn.addEventListener('click', () => {
+            hasATP = !hasATP;
+            atpBtn.classList.toggle('active', hasATP);
+            updateStatus();
+        });
+        
+        // NADPH按钮点击事件
+        nadphBtn.addEventListener('click', () => {
+            hasNADPH = !hasNADPH;
+            nadphBtn.classList.toggle('active', hasNADPH);
+            updateStatus();
+        });
+        
+        // 开始实验按钮点击事件
+        startBtn.addEventListener('click', () => {
+            if (!isExperimentRunning) {
+                isExperimentRunning = true;
+                statusText.textContent = '实验进行中...';
+                let time = 0;
+                
+                experimentInterval = setInterval(() => {
+                    time++;
+                    
+                    // 完整光合作用: 有光照和CO2（光反应产生ATP和NADPH，暗反应合成糖）
+                    if (isLightOn && hasCO2) {
+                        sugarLevel += 2; // 完整光合作用效率最高
+                    }
+                    // 仅暗反应: 无光但有CO2、ATP和NADPH（只能短暂合成糖）
+                    else if (!isLightOn && hasCO2 && hasATP && hasNADPH) {
+                        sugarLevel += 1;
+                    }
+                    // 仅光反应: 有光但无CO2（只产生ATP和NADPH，不合成糖）
+                    else if (isLightOn && !hasCO2) {
+                        sugarLevel += 0.5; // 少量糖类（可能是叶绿体内储存的）
+                    }
+                    
+                    // 更新糖类指示器和进度条
+                    sugarIndicator.textContent = `糖类: ${Math.round(sugarLevel)}`;
+                    progressBar.style.width = `${Math.min(sugarLevel, 100)}%`;
+                    updateChart(time);
+                    
+                    // 限制糖类最大值
+                    if (sugarLevel >= 100) {
+                        sugarLevel = 100;
+                        statusText.textContent = '实验完成: 糖类生成达到最大值';
+                        clearInterval(experimentInterval);
+                        isExperimentRunning = false;
+                    }
+                }, 200);
+            }
+        });
+        
+        // 停止实验按钮点击事件
+        stopBtn.addEventListener('click', () => {
+            if (isExperimentRunning) {
+                clearInterval(experimentInterval);
+                isExperimentRunning = false;
+                statusText.textContent = '实验已停止';
+            }
+        });
+        
+        // 重置实验按钮点击事件
+        resetBtn.addEventListener('click', () => {
+            clearInterval(experimentInterval);
+            isExperimentRunning = false;
+            sugarLevel = 0;
+            sugarData = [];
+            timeData = [];
+            sugarIndicator.textContent = '糖类: 0';
+            progressBar.style.width = '0%';
+            statusText.textContent = '实验已重置';
+            chart.data.labels = timeData;
+            chart.data.datasets[0].data = sugarData;
+            chart.update();
+        });
+        
+        // 更新状态文本
+        function updateStatus() {
+            if (!isExperimentRunning) {
+                let status = '准备开始实验 - ';
+                status += isLightOn ? '光照开启 | ' : '光照关闭 | ';
+                status += hasCO2 ? 'CO₂已添加 | ' : 'CO₂未添加 | ';
+                status += hasATP ? 'ATP已添加 | ' : 'ATP未添加 | ';
+                status += hasNADPH ? 'NADPH已添加' : 'NADPH未添加';
+                statusText.textContent = status;
+            }
+        }
+        
+        // 初始化
+        createChloroplasts();
+        initChart();
+        updateStatus();
+    </script>
+</body>
+</html>

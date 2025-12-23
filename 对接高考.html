@@ -1,0 +1,711 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对接高考 - 光合作用知识测试</title>
+    <link rel="stylesheet" href="css/tailwind.min.css">
+    <!-- 使用CDN加载Font Awesome，解决图标显示问题 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 导航栏样式 */
+        nav {
+            background: linear-gradient(to right, #2D7D46, #1B5E20);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-brand span {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+        
+        .nav-brand h1 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c5530;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .test-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #2D7D46;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            box-shadow: 0 5px 15px rgba(45, 125, 70, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .question-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #2D7D46;
+            background: #f0f8f4;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option.selected {
+            border-color: #2D7D46;
+            background: #e8f5e9;
+        }
+
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .option.wrong {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2D7D46 0%, #1B5E20 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 125, 70, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            margin-left: 15px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, #2D7D46 0%, #1B5E20 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .score {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .evaluation {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4caf50 0%, #8bc34a 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .timer {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c5530;
+        }
+
+        .explanation {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <span>🍃</span>
+                    <h1>光合作用原理探索交互网页</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="main.html" class="nav-item">首页</a>
+                    <a href="希尔实验模拟工具.html" class="nav-item">希尔实验</a>
+                    <a href="阿尔农实验模拟工具.html" class="nav-item">阿尔农实验</a>
+                    <a href="贾格道夫实验模拟工具.html" class="nav-item">贾格道夫实验</a>
+                    <a href="光反应.html" class="nav-item">光反应模型</a>
+                    <a href="阿尔农虚拟实验工具2.html" class="nav-item">阿尔农2</a>
+                    <a href="卡尔文循环实验模拟工具.html" class="nav-item">卡尔文循环</a>
+                    <a href="光反应和暗反应之间的联系.html" class="nav-item">光暗反应联系</a>
+                    <a href="对接高考.html" class="nav-item active">对接高考</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="timer" id="timer">
+        <i class="fas fa-clock"></i> 时间: <span id="time">00:00</span>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> 对接高考</h1>
+            <p>光合作用知识点专项测试 - 检验你的学习成果</p>
+        </div>
+
+        <div id="startScreen" class="test-container">
+            <div style="text-align: center; padding: 40px;">
+                <i class="fas fa-book-reader" style="font-size: 5em; color: #2D7D46; margin-bottom: 30px;"></i>
+                <h2 style="font-size: 2em; color: #333; margin-bottom: 20px;">准备好开始测试了吗？</h2>
+                <p style="font-size: 1.2em; color: #666; margin-bottom: 30px;">
+                    本测试包含10道选择题，涵盖光合作用的各个知识点<br>
+                    包括希尔实验、阿尔农实验、贾格道夫实验、卡尔文循环等内容<br>
+                    建议用时：10分钟
+                </p>
+                <button class="btn btn-primary" onclick="startTest()">
+                    <i class="fas fa-play"></i> 开始测试
+                </button>
+            </div>
+        </div>
+
+        <div id="testScreen" class="test-container hidden">
+            <div id="questionsContainer"></div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" onclick="submitTest()">
+                    <i class="fas fa-check"></i> 提交答案
+                </button>
+                <button class="btn btn-secondary" onclick="resetTest()">
+                    <i class="fas fa-redo"></i> 重新开始
+                </button>
+            </div>
+        </div>
+
+        <div id="resultScreen" class="hidden">
+            <div class="result-container">
+                <h2 style="font-size: 2.5em; margin-bottom: 20px;">
+                    <i class="fas fa-trophy"></i> 测试完成！
+                </h2>
+                <div class="score" id="scoreDisplay">0</div>
+                <div class="evaluation" id="evaluation"></div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%">
+                        <span id="progressText">0%</span>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle" style="font-size: 2em;"></i>
+                        <div class="stat-number" id="correctCount">0</div>
+                        <div class="stat-label">答对题数</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-times-circle" style="font-size: 2em;"></i>
+                        <div class="stat-number" id="wrongCount">0</div>
+                        <div class="stat-label">答错题数</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock" style="font-size: 2em;"></i>
+                        <div class="stat-number" id="timeUsed">0</div>
+                        <div class="stat-label">用时(秒)</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="viewAnswers()">
+                        <i class="fas fa-eye"></i> 查看答案解析
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetTest()">
+                        <i class="fas fa-redo"></i> 再测一次
+                    </button>
+                </div>
+            </div>
+
+            <div id="answersReview" class="test-container hidden" style="margin-top: 30px;">
+                <h2 style="text-align: center; color: #2D7D46; margin-bottom: 30px; font-size: 2em;">
+                    <i class="fas fa-clipboard-list"></i> 答案解析
+                </h2>
+                <div id="reviewContainer"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-secondary" onclick="hideAnswers()">
+                        <i class="fas fa-arrow-up"></i> 返回成绩
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionBank = [
+            {
+                question: "1. 希尔实验证明了光合作用中哪个过程可以在离体叶绿体中进行？",
+                options: ["A. 光反应中的水的光解", "B. 暗反应中的CO₂固定", "C. ATP的合成", "D. 有机物的合成"],
+                answer: 0,
+                explanation: "希尔实验使用离体叶绿体和人工电子受体，证明了在光照条件下，叶绿体能够分解水释放氧气，这是光反应的一部分。"
+            },
+            {
+                question: "2. 在希尔实验中，使用的人工电子受体的作用是什么？",
+                options: ["A. 提供能量", "B. 接受光反应产生的电子", "C. 固定CO₂", "D. 分解水分子"],
+                answer: 1,
+                explanation: "人工电子受体（如铁氰化钾）在希尔实验中替代NADP⁺，接受光反应产生的电子，使水的光解过程能够持续进行。"
+            },
+            {
+                question: "3. 阿尔农实验证明了叶绿体具有什么功能？",
+                options: ["A. 只能进行光反应", "B. 只能进行暗反应", "C. 能够独立完成光合作用全过程", "D. 只能合成ATP"],
+                answer: 2,
+                explanation: "阿尔农实验使用完整的叶绿体，在提供光、CO₂和水的条件下，证明了叶绿体能够独立完成从光反应到暗反应的整个光合作用过程。"
+            },
+            {
+                question: "4. 贾格道夫实验中，将叶绿体放在pH=4的酸性溶液中处理的目的是什么？",
+                options: ["A. 破坏叶绿体结构", "B. 使类囊体腔内积累大量H⁺", "C. 促进ATP合成", "D. 抑制光反应"],
+                answer: 1,
+                explanation: "在酸性溶液中处理使类囊体腔内外都充满H⁺，当转移到pH=8的碱性溶液中时，形成浓度梯度，驱动ATP合成酶工作。"
+            },
+            {
+                question: "5. 贾格道夫实验证明了ATP合成的直接动力是什么？",
+                options: ["A. 光能", "B. 电子传递", "C. H⁺浓度梯度", "D. 化学能"],
+                answer: 2,
+                explanation: "贾格道夫实验在黑暗条件下仅通过H⁺浓度梯度就能合成ATP，证明了H⁺浓度梯度是ATP合成的直接动力，支持了化学渗透假说。"
+            },
+            {
+                question: "6. 卡尔文循环的第一步是CO₂与什么物质结合？",
+                options: ["A. 三碳化合物", "B. 五碳化合物(C₅)", "C. 六碳化合物", "D. 二碳化合物"],
+                answer: 1,
+                explanation: "CO₂固定是卡尔文循环的第一步，CO₂与五碳化合物(核酮糖-1,5-二磷酸，RuBP)结合，在Rubisco酶催化下形成两分子三碳化合物。"
+            },
+            {
+                question: "7. 在卡尔文循环中，三碳化合物被还原需要消耗什么物质？",
+                options: ["A. 只需要ATP", "B. 只需要NADPH", "C. 需要ATP和NADPH", "D. 需要光能"],
+                answer: 2,
+                explanation: "三碳化合物的还原需要光反应提供的ATP和NADPH，ATP提供能量，NADPH提供还原力（氢）。"
+            },
+            {
+                question: "8. 光合作用中，氧气的来源是什么？",
+                options: ["A. CO₂", "B. H₂O", "C. 葡萄糖", "D. ATP"],
+                answer: 1,
+                explanation: "光合作用释放的氧气全部来自水的光解，这在光反应阶段发生，水分子在光系统II中被分解为氧气、氢离子和电子。"
+            },
+            {
+                question: "9. 光系统II和光系统I在光反应中的主要作用分别是什么？",
+                options: ["A. 都是分解水", "B. 都是合成ATP", "C. 光系统II分解水，光系统I还原NADP⁺", "D. 光系统II还原NADP⁺，光系统I分解水"],
+                answer: 2,
+                explanation: "光系统II主要负责水的光解和电子传递链的起始，光系统I主要负责接收电子并最终还原NADP⁺生成NADPH。"
+            },
+            {
+                question: "10. 影响光合作用速率的外界因素不包括哪一项？",
+                options: ["A. 光照强度", "B. CO₂浓度", "C. 温度", "D. 氧气浓度"],
+                answer: 3,
+                explanation: "光照强度影响光反应，CO₂浓度影响暗反应，温度影响酶的活性。而氧气是光合作用的产物，其浓度不是限制因素（但高浓度O₂会促进光呼吸）。"
+            },
+            {
+                question: "11. 在光反应中，ATP合成的场所是？",
+                options: ["A. 类囊体膜", "B. 叶绿体基质", "C. 类囊体腔", "D. 叶绿体外膜"],
+                answer: 0,
+                explanation: "ATP合成酶位于类囊体膜上，利用H⁺从类囊体腔流向叶绿体基质产生的能量合成ATP。"
+            },
+            {
+                question: "12. 暗反应能够在黑暗中进行的前提条件是什么？",
+                options: ["A. 有充足的CO₂", "B. 有光反应提供的ATP和NADPH", "C. 温度适宜", "D. 有足够的酶"],
+                answer: 1,
+                explanation: "暗反应虽然不需要光能直接参与，但需要光反应提供的ATP和NADPH作为能量和还原力来源。"
+            },
+            {
+                question: "13. 下列关于C₃植物和C₄植物的说法，正确的是？",
+                options: ["A. C₃植物的CO₂固定产物是四碳化合物", "B. C₄植物在高温强光下光合效率更高", "C. C₃植物没有光呼吸", "D. C₄植物不进行卡尔文循环"],
+                answer: 1,
+                explanation: "C₄植物具有特殊的CO₂浓缩机制，能在高温强光条件下保持较高的光合效率，减少光呼吸的影响。"
+            },
+            {
+                question: "14. 光合作用过程中，能量转换的顺序是？",
+                options: ["A. 光能→电能→化学能", "B. 光能→化学能→电能", "C. 化学能→光能→电能", "D. 电能→光能→化学能"],
+                answer: 0,
+                explanation: "光能首先被叶绿素吸收转化为电子的电能（电子传递），然后通过ATP和NADPH的形式转化为稳定的化学能。"
+            },
+            {
+                question: "15. 在卡尔文循环中，每固定3分子CO₂，需要消耗多少分子ATP？",
+                options: ["A. 3个", "B. 6个", "C. 9个", "D. 12个"],
+                answer: 2,
+                explanation: "固定3分子CO₂生成1分子三碳糖，需要9个ATP和6个NADPH。其中还原阶段需要6个ATP，C₅再生阶段需要3个ATP。"
+            },
+            {
+                question: "16. 叶绿体中进行光反应的具体部位是？",
+                options: ["A. 叶绿体基质", "B. 类囊体膜", "C. 叶绿体外膜", "D. 叶绿体内膜"],
+                answer: 1,
+                explanation: "光反应发生在类囊体膜上，包括光能吸收、水的光解、电子传递和ATP合成等过程。"
+            },
+            {
+                question: "17. 下列哪个实验首次证明了光合作用释放的氧气来自水？",
+                options: ["A. 希尔实验", "B. 同位素示踪实验", "C. 阿尔农实验", "D. 贾格道夫实验"],
+                answer: 1,
+                explanation: "使用¹⁸O标记的水(H₂¹⁸O)进行光合作用，发现释放的氧气中含有¹⁸O，证明了氧气来自水而非CO₂。"
+            },
+            {
+                question: "18. 光补偿点是指什么？",
+                options: ["A. 光合作用速率最大时的光照强度", "B. 光合作用速率等于呼吸作用速率时的光照强度", "C. 开始进行光合作用的最低光照强度", "D. 光合作用停止时的光照强度"],
+                answer: 1,
+                explanation: "光补偿点是光合作用吸收的CO₂量等于呼吸作用释放的CO₂量时的光照强度，此时植物有机物积累为零。"
+            },
+            {
+                question: "19. 在光合作用中，NADPH的作用是？",
+                options: ["A. 提供能量", "B. 提供还原力", "C. 固定CO₂", "D. 分解水"],
+                answer: 1,
+                explanation: "NADPH在暗反应中提供还原力（氢），用于将三碳化合物还原为三碳糖，本身被氧化为NADP⁺。"
+            },
+            {
+                question: "20. 提高温室作物产量，可以采取的措施不包括？",
+                options: ["A. 增加光照强度", "B. 适当提高CO₂浓度", "C. 降低温度到5℃以下", "D. 合理控制温度在最适范围"],
+                answer: 2,
+                explanation: "过低的温度会降低酶的活性，严重影响光合作用速率。应该将温度控制在最适范围内（一般25-30℃）。"
+            }
+        ];
+
+        let currentQuestions = [];
+        let userAnswers = [];
+        let startTime;
+        let timerInterval;
+
+        function getRandomQuestions() {
+            const shuffled = questionBank.sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, 10);
+        }
+
+        function startTest() {
+            currentQuestions = getRandomQuestions();
+            userAnswers = new Array(10).fill(-1);
+            
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testScreen').classList.remove('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            
+            renderQuestions();
+            startTimer();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            currentQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-card';
+                
+                // 重新编号：将原题目中的序号替换为当前序号
+                const questionText = q.question.replace(/^\d+\.\s*/, (index + 1) + '. ');
+                
+                let optionsHTML = '';
+                q.options.forEach((option, optIndex) => {
+                    optionsHTML += '<label class="option" id="q' + index + '_opt' + optIndex + '">' +
+                        '<input type="radio" name="q' + index + '" value="' + optIndex + '" ' +
+                        'onchange="selectOption(' + index + ', ' + optIndex + ')">' +
+                        '<span>' + option + '</span></label>';
+                });
+                
+                questionDiv.innerHTML = '<div class="question-title">' + questionText + '</div>' + optionsHTML;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            
+            for (let i = 0; i < 4; i++) {
+                const opt = document.getElementById('q' + questionIndex + '_opt' + i);
+                if (opt) opt.classList.remove('selected');
+            }
+            const selectedOpt = document.getElementById('q' + questionIndex + '_opt' + optionIndex);
+            if (selectedOpt) selectedOpt.classList.add('selected');
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('time').textContent = 
+                    String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+            }, 1000);
+        }
+
+        function submitTest() {
+            if (userAnswers.includes(-1)) {
+                if (!confirm('还有题目未作答，确定要提交吗？')) return;
+            }
+
+            clearInterval(timerInterval);
+            const timeUsed = Math.floor((Date.now() - startTime) / 1000);
+            
+            let correctCount = 0;
+            currentQuestions.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) correctCount++;
+            });
+            
+            const score = correctCount * 10;
+            const wrongCount = 10 - correctCount;
+            
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+            
+            animateScore(score);
+            
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('wrongCount').textContent = wrongCount;
+            document.getElementById('timeUsed').textContent = timeUsed;
+            
+            setTimeout(() => {
+                document.getElementById('progressFill').style.width = score + '%';
+                document.getElementById('progressText').textContent = score + '%';
+            }, 500);
+            
+            let evaluation = '';
+            if (score === 100) evaluation = '🎉 完美！你已经完全掌握了光合作用的知识！';
+            else if (score >= 90) evaluation = '👏 优秀！你对光合作用有很好的理解！';
+            else if (score >= 80) evaluation = '😊 良好！继续加油，你会更好！';
+            else if (score >= 70) evaluation = '💪 中等！还需要加强对知识点的理解。';
+            else if (score >= 60) evaluation = '📚 及格！建议重新复习相关知识点。';
+            else evaluation = '😢 不及格，需要系统地学习光合作用知识。';
+            
+            document.getElementById('evaluation').textContent = evaluation;
+        }
+
+        function animateScore(targetScore) {
+            let current = 0;
+            const increment = targetScore / 50;
+            const interval = setInterval(() => {
+                current += increment;
+                if (current >= targetScore) {
+                    current = targetScore;
+                    clearInterval(interval);
+                }
+                document.getElementById('scoreDisplay').textContent = Math.round(current) + '分';
+            }, 20);
+        }
+
+        function viewAnswers() {
+            document.getElementById('answersReview').classList.remove('hidden');
+            const container = document.getElementById('reviewContainer');
+            container.innerHTML = '';
+            
+            currentQuestions.forEach((q, index) => {
+                const isCorrect = userAnswers[index] === q.answer;
+                const reviewDiv = document.createElement('div');
+                reviewDiv.className = 'question-card';
+                
+                // 重新编号：将原题目中的序号替换为当前序号
+                const questionText = q.question.replace(/^\d+\.\s*/, (index + 1) + '. ');
+                
+                let optionsHTML = '';
+                q.options.forEach((option, optIndex) => {
+                    let className = 'option';
+                    if (optIndex === q.answer) className += ' correct';
+                    else if (optIndex === userAnswers[index] && !isCorrect) className += ' wrong';
+                    optionsHTML += '<div class="' + className + '"><span>' + option + '</span></div>';
+                });
+                
+                const iconHTML = isCorrect ?
+                    '<i class="fas fa-check-circle" style="color: #4caf50;"></i>' :
+                    '<i class="fas fa-times-circle" style="color: #f44336;"></i>';
+                
+                reviewDiv.innerHTML = '<div class="question-title">' + iconHTML + ' ' + questionText + '</div>' +
+                    optionsHTML +
+                    '<div class="explanation"><strong><i class="fas fa-lightbulb"></i> 解析：</strong>' +
+                    q.explanation + '</div>';
+                
+                container.appendChild(reviewDiv);
+            });
+            
+            window.scrollTo({ top: document.getElementById('answersReview').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function hideAnswers() {
+            document.getElementById('answersReview').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetTest() {
+            if (timerInterval) clearInterval(timerInterval);
+            document.getElementById('time').textContent = '00:00';
+            document.getElementById('startScreen').classList.remove('hidden');
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('answersReview').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

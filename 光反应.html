@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光反应模拟实验（拖动填空）</title>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: "微软雅黑", sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        /* 导航栏样式 */
+        nav {
+            background: linear-gradient(to right, #2D7D46, #1B5E20);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-brand span {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+        
+        .nav-brand h1 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            margin: 20px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .tips {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        /* 按钮容器 */
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        /* 清除按钮样式 */
+        .reset-btn {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .reset-btn:hover {
+            background: linear-gradient(to right, #c0392b, #a93226);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .reset-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* 视频按钮样式 */
+        .video-btn {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .video-btn:hover {
+            background: linear-gradient(to right, #2980b9, #21618c);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .video-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* 视频模态框样式 */
+        .video-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .video-modal-content {
+            position: relative;
+            margin: 5% auto;
+            width: 90%;
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            animation: slideDownModal 0.3s;
+        }
+        
+        @keyframes slideDownModal {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .video-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .video-modal-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        
+        .close-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+        
+        .video-container {
+            width: 100%;
+            background: #000;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        /* 提示信息样式 - 固定在顶部，不阻挡操作区域 */
+        .message {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 6px;
+            display: none;
+            z-index: 1000;
+            min-width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* 拖动物品区 */
+        .drag-items {
+            border: 2px dashed #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 100px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-radius: 6px;
+        }
+        .drag-item {
+            width: 80px;
+            height: 80px;
+            padding: 5px;
+            background: #f1f1f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            text-align: center;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+        .drag-item:hover {
+            transform: scale(1.05);
+        }
+        .drag-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        .drag-item span {
+            font-size: 12px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+
+        /* 模拟实验区（背景图+放置目标） */
+        .experiment-container {
+            overflow: auto; /* 允许小屏幕滚动 */
+        }
+        .experiment-area {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            border: 2px solid #2c3e50;
+            background: url("图片/光反应背景图.png") no-repeat center/contain;
+            background-color: #e8f5e9;
+            margin: 0 auto;
+        }
+        .drop-target {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border: 2px dashed #e74c3c;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: transparent; /* 隐藏文字 */
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.6);
+            font-weight: bold;
+        }
+        .drop-target.small {
+            width: 60px;
+            height: 60px;
+        }
+        .drop-target.h2o {
+            width: 60px;
+            height: 50px;
+        }
+        .drop-target.h-small {
+            width: 40px;
+            height: 40px;
+        }
+        .drop-target.nadp-small {
+            height: 40px;
+        }
+        .drop-target.h-medium {
+            width: 45px;
+            height: 40px;
+        }
+        .drop-target.h-lumen {
+            width: 50px;
+            height: 45px;
+        }
+        .drop-target.adppi {
+            width: 80px;
+            height: 80px;
+        }
+        .drop-target.correct {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.2);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .experiment-area {
+                height: 400px;
+            }
+            .drag-item {
+                width: 70px;
+                height: 70px;
+            }
+            .drag-item img {
+                width: 40px;
+                height: 40px;
+            }
+            .video-modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <span>🍃</span>
+                    <h1>光合作用原理探索交互网页</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="main.html" class="nav-item">首页</a>
+                    <a href="希尔实验模拟工具.html" class="nav-item">希尔实验</a>
+                    <a href="阿尔农实验模拟工具.html" class="nav-item">阿尔农实验</a>
+                    <a href="贾格道夫实验模拟工具.html" class="nav-item">贾格道夫实验</a>
+                    <a href="光反应.html" class="nav-item active">光反应模型</a>
+                    <a href="阿尔农虚拟实验工具2.html" class="nav-item">阿尔农2</a>
+                    <a href="卡尔文循环实验模拟工具.html" class="nav-item">卡尔文循环</a>
+                    <a href="光反应和暗反应之间的联系.html" class="nav-item">光暗反应联系</a>
+                    <a href="对接高考.html" class="nav-item">对接高考</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h2>光反应过程模拟实验（拖动模型到对应位置）</h2>
+        <p class="tips">实验说明：将下方的模型拖动到实验区的对应位置，完成光反应的结构/物质匹配。光反应发生在类囊体膜上，涉及光系统、电子传递链和ATP合成等过程。</p>
+        
+        <!-- 提示信息区域 -->
+        <div class="message success" id="successMsg"></div>
+        <div class="message error" id="errorMsg"></div>
+
+        <!-- 按钮容器 -->
+        <div class="button-container">
+            <button class="reset-btn" id="resetBtn">🔄 一键清除</button>
+            <button class="video-btn" id="videoBtn">🎬 播放光反应视频</button>
+        </div>
+
+        <!-- 拖动物品区 -->
+        <div class="drag-items">
+            <div class="drag-item" draggable="true" id="light">
+                <img src="图片/光.png" alt="光" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Ccircle cx=%2225%22 cy=%2225%22 r=%2220%22 fill=%22%23ffeb3b%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2220%22%3E☀%3C/text%3E%3C/svg%3E'">
+                <span>光</span>
+            </div>
+            <div class="drag-item" draggable="true" id="psii">
+                <img src="图片/光系统II.png" alt="光系统II" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23ffeb3b%22 width=%2250%22 height=%2250%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2220%22%3EⅡ%3C/text%3E%3C/svg%3E'">
+                <span>光系统II</span>
+            </div>
+            <div class="drag-item" draggable="true" id="psi">
+                <img src="图片/光系统I.png" alt="光系统I" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23ff9800%22 width=%2250%22 height=%2250%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2220%22%3EⅠ%3C/text%3E%3C/svg%3E'">
+                <span>光系统I</span>
+            </div>
+            <div class="drag-item" draggable="true" id="nadp">
+                <img src="图片/NADP+.png" alt="NADP+" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23ff5722%22 width=%2250%22 height=%2250%22 rx=%225%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2212%22 fill=%22white%22%3ENADP⁺%3C/text%3E%3C/svg%3E'">
+                <span>NADP+</span>
+            </div>
+            <div class="drag-item" draggable="true" id="nadph">
+                <img src="图片/NADPH.png" alt="NADPH" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%234caf50%22 width=%2250%22 height=%2250%22 rx=%225%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2210%22 fill=%22white%22%3ENADPH%3C/text%3E%3C/svg%3E'">
+                <span>NADPH</span>
+            </div>
+            <div class="drag-item" draggable="true" id="o2">
+                <img src="图片/O2.png" alt="氧气" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Ccircle cx=%2225%22 cy=%2225%22 r=%2220%22 fill=%22%2300bcd4%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2212%22 fill=%22white%22%3EO₂%3C/text%3E%3C/svg%3E'">
+                <span>氧气（O2）</span>
+            </div>
+            <div class="drag-item" draggable="true" id="atpase">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect fill='%23673ab7' width='50' height='50' rx='5'/%3E%3Ctext x='25' y='20' text-anchor='middle' font-size='10' fill='white'%3EATP%3C/text%3E%3Ctext x='25' y='35' text-anchor='middle' font-size='8' fill='white'%3E合成酶%3C/text%3E%3C/svg%3E" alt="ATP合成酶">
+                <span>ATP合成酶</span>
+            </div>
+            <div class="drag-item" draggable="true" id="h2o">
+                <img src="图片/H2O.png" alt="水" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Ccircle cx=%2225%22 cy=%2225%22 r=%2220%22 fill=%22%2303a9f4%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2212%22 fill=%22white%22%3EH₂O%3C/text%3E%3C/svg%3E'">
+                <span>水（H2O）</span>
+            </div>
+            <div class="drag-item" draggable="true" id="h">
+                <img src="图片/H⁺模型图.png" alt="质子" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Ccircle cx=%2225%22 cy=%2225%22 r=%2220%22 fill=%22%23f44336%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2212%22 fill=%22white%22%3EH⁺%3C/text%3E%3C/svg%3E'">
+                <span>质子（H+）</span>
+            </div>
+            <div class="drag-item" draggable="true" id="adppi">
+                <img src="图片/ADP+Pi.png" alt="ADP+Pi" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23ff9800%22 width=%2250%22 height=%2250%22 rx=%225%22/%3E%3Ctext x=%2225%22 y=%2225%22 text-anchor=%22middle%22 font-size=%2210%22 fill=%22white%22%3EADP%3C/text%3E%3Ctext x=%2225%22 y=%2238%22 text-anchor=%22middle%22 font-size=%2210%22 fill=%22white%22%3E+Pi%3C/text%3E%3C/svg%3E'">
+                <span>ADP+Pi</span>
+            </div>
+            <div class="drag-item" draggable="true" id="electron">
+                <img src="图片/电子.png" alt="电子" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Ccircle cx=%2225%22 cy=%2225%22 r=%2220%22 fill=%22%23ffc107%22/%3E%3Ctext x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2214%22 fill=%22white%22%3Ee⁻%3C/text%3E%3C/svg%3E'">
+                <span>电子（e⁻）</span>
+            </div>
+        </div>
+
+        <!-- 模拟实验区（放置目标已按背景图实际位置调整） -->
+        <div class="experiment-container">
+            <div class="experiment-area">
+                <!-- 光的位置 - 照射到光系统 -->
+                <div class="drop-target light" data-target="light" style="top: 67px; left: 331px; width: 77px; height: 45px;">光</div>
+                
+                <!-- 光系统II位置 - 左侧 -->
+                <div class="drop-target" data-target="psii" style="top: 150px; left: 150px;">光系统II</div>
+                
+                <!-- 水的位置 - 光系统II左侧 -->
+                <div class="drop-target h2o" data-target="h2o" style="top: 270px; left: 105px;">H2O</div>
+                
+                <!-- O2位置 - 光系统II上方（可接受O2或H+） -->
+                <div class="drop-target small" data-target="o2,h" data-group="o2-h-left1" style="top: 293px; left: 165px;">O2</div>
+                
+                <!-- H+位置1 - 光系统II右侧（可接受H+或O2） -->
+                <div class="drop-target h-small" data-target="h,o2" data-group="o2-h-left2" style="top: 270px; left: 233px;">H+</div>
+                
+                <!-- 光系统I位置 - 右侧 -->
+                <div class="drop-target" data-target="psi" style="top: 150px; left: 450px;">光系统I</div>
+                
+                <!-- NADP+位置 - 光系统I右上方（可接受NADP+或H+） -->
+                <div class="drop-target nadp-small" data-target="nadp,h" data-group="nadp-h-right1" style="top: 55px; left: 448px;">NADP+</div>
+                
+                <!-- 电子位置1 - 光系统II传递电子给细胞色素 b6f 复合体 -->
+                <div class="drop-target h-small" data-target="electron" style="top: 171px; left: 255px;">e⁻</div>
+                
+                <!-- 电子位置2 - NADP+和H+之间（电子参与NADPH生成） -->
+                <div class="drop-target h-small" data-target="electron" style="top: 100px; left: 597px;">e⁻</div>
+                
+                <!-- H+位置2 - 光系统I右侧（可接受H+或NADP+） -->
+                <div class="drop-target h-medium" data-target="h,nadp" data-group="nadp-h-right2" style="top: 54px; left: 551px;">H+</div>
+                
+                <!-- NADPH位置 - 光系统I右下方 -->
+                <div class="drop-target nadp-small" data-target="nadph" style="top: 55px; left: 643px;">NADPH</div>
+                
+                <!-- H+位置3 - 通过细胞色素b6f复合体进入内囊体腔 -->
+                <div class="drop-target h-medium" data-target="h" style="top: 139px; left: 339px;">H+</div>
+                
+                <!-- H+位置4 - 腔内H+（类囊体腔内积累的质子，用于ATP合成） -->
+                <div class="drop-target h-lumen" data-target="h" style="top: 350px; left: 350px;">腔内H+</div>
+                
+                <!-- ADP+Pi位置 - ATP合成酶附近 -->
+                <div class="drop-target adppi" data-target="adppi" style="top: 273px; left: 648px;">ADP+Pi</div>
+                
+                <!-- ATP合成酶位置 - 类囊体膜上，H+通道 -->
+                <div class="drop-target" data-target="atpase" style="top: 279px; left: 593px; width: 49px; height: 51px;">ATP合成酶</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 视频模态框 -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-modal-content">
+            <div class="video-modal-header">
+                <h3>🎬 光反应过程视频</h3>
+                <button class="close-btn" id="closeVideoBtn">✖ 关闭</button>
+            </div>
+            <div class="video-container">
+                <video id="videoPlayer" controls>
+                    <source src="视频/光反应.MP4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取提示信息元素
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
+        
+        // 视频相关元素
+        const videoBtn = document.getElementById('videoBtn');
+        const videoModal = document.getElementById('videoModal');
+        const closeVideoBtn = document.getElementById('closeVideoBtn');
+        const videoPlayer = document.getElementById('videoPlayer');
+        
+        // 打开视频模态框
+        videoBtn.addEventListener('click', function() {
+            videoModal.style.display = 'block';
+            videoPlayer.play();
+        });
+        
+        // 关闭视频模态框
+        closeVideoBtn.addEventListener('click', function() {
+            videoModal.style.display = 'none';
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+        });
+        
+        // 点击模态框外部关闭
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                videoModal.style.display = 'none';
+                videoPlayer.pause();
+                videoPlayer.currentTime = 0;
+            }
+        });
+        
+        // ESC键关闭模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && videoModal.style.display === 'block') {
+                videoModal.style.display = 'none';
+                videoPlayer.pause();
+                videoPlayer.currentTime = 0;
+            }
+        });
+        
+        // 定义互换组：这些位置可以互换，但不能放相同的物品
+        const swapGroups = [
+            ['o2-h-left1', 'o2-h-left2'],  // 左侧O2和H+组
+            ['nadp-h-right1', 'nadp-h-right2']  // 右侧NADP+和H+组
+        ];
+
+        // H+使用次数限制（最多4次）
+        let hUsageCount = 0;
+        const MAX_H_USAGE = 4;
+        
+        // 电子使用次数限制（最多2次）
+        let electronUsageCount = 0;
+        const MAX_ELECTRON_USAGE = 2;
+
+        // 拖动物品 - 开始拖动
+        document.querySelectorAll(".drag-item").forEach(item => {
+            item.addEventListener("dragstart", (e) => {
+                // 确保获取到最外层drag-item的id（解决点击图片时的id获取问题）
+                const dragItem = e.target.closest('.drag-item');
+                const draggedItemId = dragItem.id;
+                e.dataTransfer.setData("text/plain", draggedItemId);
+                dragItem.style.opacity = "0.5";
+                // 隐藏提示信息
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'none';
+            });
+
+            item.addEventListener("dragend", (e) => {
+                const dragItem = e.target.closest('.drag-item');
+                dragItem.style.opacity = "1";
+            });
+        });
+
+        // 放置目标 - 允许放置
+        document.querySelectorAll(".drop-target").forEach(target => {
+            target.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                target.style.background = "rgba(231, 76, 60, 0.2)";
+            });
+
+            target.addEventListener("dragleave", (e) => {
+                target.style.background = "rgba(255, 255, 255, 0.6)";
+            });
+
+            // 放置目标 - 完成放置
+            target.addEventListener("drop", (e) => {
+                e.preventDefault();
+                target.style.background = "rgba(255, 255, 255, 0.6)";
+                
+                const droppedItemId = e.dataTransfer.getData("text/plain");
+                const targetId = target.dataset.target;
+                
+                // 检查是否匹配目标（支持多个正确答案，用逗号分隔）
+                const validTargets = targetId.split(',');
+                if (validTargets.includes(droppedItemId)) {
+                    // 如果是H+，检查使用次数
+                    if (droppedItemId === 'h') {
+                        if (hUsageCount >= MAX_H_USAGE) {
+                            errorMsg.textContent = `错误：H⁺最多只能使用${MAX_H_USAGE}次，已达到上限`;
+                            errorMsg.style.display = 'block';
+                            setTimeout(() => {
+                                errorMsg.style.display = 'none';
+                            }, 3000);
+                            return;
+                        }
+                    }
+                    
+                    // 如果是电子，检查使用次数
+                    if (droppedItemId === 'electron') {
+                        if (electronUsageCount >= MAX_ELECTRON_USAGE) {
+                            errorMsg.textContent = `错误：电子最多只能使用${MAX_ELECTRON_USAGE}次，已达到上限`;
+                            errorMsg.style.display = 'block';
+                            setTimeout(() => {
+                                errorMsg.style.display = 'none';
+                            }, 3000);
+                            return;
+                        }
+                    }
+                    
+                    // 检查互换组：如果在同一组内，不能放置相同的物品
+                    const currentGroup = target.dataset.group;
+                    if (currentGroup) {
+                        // 找到当前组的所有成员
+                        const groupMembers = swapGroups.find(group => group.includes(currentGroup));
+                        if (groupMembers) {
+                            // 检查组内其他位置是否已经放置了相同的物品
+                            let hasSameItem = false;
+                            groupMembers.forEach(memberId => {
+                                if (memberId !== currentGroup) {
+                                    const otherTarget = document.querySelector(`[data-group="${memberId}"]`);
+                                    if (otherTarget && otherTarget.classList.contains('correct')) {
+                                        const placedItem = otherTarget.querySelector('.drag-item');
+                                        if (placedItem && placedItem.id === droppedItemId) {
+                                            hasSameItem = true;
+                                        }
+                                    }
+                                }
+                            });
+                            
+                            if (hasSameItem) {
+                                errorMsg.textContent = `错误：该组内已经放置了相同的物品，请选择另一个物品`;
+                                errorMsg.style.display = 'block';
+                                setTimeout(() => {
+                                    errorMsg.style.display = 'none';
+                                }, 3000);
+                                return;
+                            }
+                        }
+                    }
+                    
+                    // 克隆拖动物品并放入目标
+                    const draggedItem = document.getElementById(droppedItemId);
+                    const cloneItem = draggedItem.cloneNode(true);
+                    cloneItem.draggable = false;
+                    cloneItem.style.cursor = "default";
+                    target.innerHTML = "";
+                    target.appendChild(cloneItem);
+                    // 标记为正确放置
+                    target.classList.add('correct');
+                    
+                    // H+可以使用4次，电子可以使用2次，其他物品只能使用一次
+                    if (droppedItemId === 'h') {
+                        hUsageCount++;
+                        // 当H+使用达到4次时，隐藏源元素
+                        if (hUsageCount >= MAX_H_USAGE) {
+                            draggedItem.style.display = 'none';
+                        }
+                    } else if (droppedItemId === 'electron') {
+                        electronUsageCount++;
+                        // 当电子使用达到2次时，隐藏源元素
+                        if (electronUsageCount >= MAX_ELECTRON_USAGE) {
+                            draggedItem.style.display = 'none';
+                        }
+                    } else {
+                        // 其他物品只能使用一次，隐藏源元素
+                        draggedItem.style.display = 'none';
+                    }
+                    
+                    // 显示成功提示，3秒后自动消失
+                    successMsg.textContent = `正确：${cloneItem.querySelector('span').textContent}已放置到正确位置`;
+                    successMsg.style.display = 'block';
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 3000);
+                } else {
+                    // 显示错误提示，3秒后自动消失
+                    const targetName = target.textContent;
+                    errorMsg.textContent = `错误：该位置是${targetName}，请拖动正确的模型`;
+                    errorMsg.style.display = 'block';
+                    setTimeout(() => {
+                        errorMsg.style.display = 'none';
+                    }, 3000);
+                }
+            });
+        });
+        
+        // 一键清除功能
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            // 重置H+和电子使用次数
+            hUsageCount = 0;
+            electronUsageCount = 0;
+            
+            // 清空所有虚线框
+            document.querySelectorAll('.drop-target').forEach(target => {
+                target.innerHTML = target.textContent; // 恢复原始文本
+                target.classList.remove('correct');
+                target.style.background = 'rgba(255, 255, 255, 0.6)';
+            });
+            
+            // 恢复所有拖动物品的显示
+            document.querySelectorAll('.drag-item').forEach(item => {
+                item.style.display = 'flex';
+                item.style.opacity = '1';
+            });
+            
+            // 隐藏提示信息
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            // 显示清除成功提示
+            successMsg.textContent = '已清除所有内容，可以重新开始实验';
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
